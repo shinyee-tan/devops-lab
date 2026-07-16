@@ -1,28 +1,30 @@
 name: Build Docker Image
 on:
-push:
-branches: [ main, 'feature/**' ]
+  push:
+    branches: [ main, 'feature/**' ]
+
 jobs:
-build:
-runs-on: ubuntu-latest
-steps:
-- uses: actions/checkout@v3
-- name: Run tests first
-run: |
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-DevOps Essential Training — Lab Guide · Page 9 of 26
+      - name: Run tests first
+        run: |
+          pip install pytest flask
+          pytest tests/ -v
 
-pip install pytest flask
-pytest tests/ -v
-- name: Build Docker image
-run: |
-docker build -t myapp:${{ github.sha }} .
-docker tag myapp:${{ github.sha }} myapp:latest
-- name: List images
-run: docker images | grep myapp
-- name: Test the container starts
-run: |
-docker run -d -p 5000:5000 --name test-app myapp:latest
-sleep 3
-curl -f http://localhost:5000/health || exit 1
-docker stop test-app
+      - name: Build Docker image
+        run: |
+          docker build -t myapp:${{ github.sha }} .
+          docker tag  myapp1:${{ github.sha }} myapp1:latest
+
+      - name: List images
+        run: docker images | grep myapp
+
+      - name: Test the container starts
+        run: |
+          docker run -d -p 5000:5000 --name test-app myapp1:latest
+          sleep 3
+          curl -f http://localhost:5000/health || exit 1
+          docker stop test-app
