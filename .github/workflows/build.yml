@@ -17,14 +17,14 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t myapp:${{ github.sha }} .
-          docker tag  myapp1:${{ github.sha }} myapp1:latest
+          docker tag  myapp:${{ github.sha }} myapp:latest
 
       - name: List images
         run: docker images | grep myapp
 
       - name: Test the container starts
         run: |
-          docker run -d -p 5000:5000 --name test-app myapp1:latest
+          docker run -d -p 5000:5000 --name test-app myapp:latest
           sleep 3
           curl -f http://localhost:5000/health || exit 1
           docker stop test-app
